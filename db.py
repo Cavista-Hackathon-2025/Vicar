@@ -1,7 +1,8 @@
 import sqlite3
 from datetime import datetime
+import os
 
-DB_PATH = "pharmacy.db"  # os.getenv('DB_PATH', '/home/user/pharmacy.db')
+DB_PATH = os.getenv("DB_PATH", "pharmacy.db")
 
 def init_db():
     with sqlite3.connect(DB_PATH) as conn:
