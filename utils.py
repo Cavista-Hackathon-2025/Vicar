@@ -12,11 +12,19 @@ except ImportError:
     raise
 
 from datetime import datetime
-from typing import Optional, List
+from typing import Optional, List, Dict, Any
 import os
 
 # Load environment variables
 load_dotenv()
+
+# Server configuration
+PORT = int(os.getenv('PORT', 5000))
+USE_NGROK = os.getenv('USE_NGROK', 'False').lower() == 'true'
+NGROK_AUTH_TOKEN = os.getenv('NGROK_AUTH_TOKEN')
+
+# Base URL configuration
+BASE_URL = f"http://127.0.0.1:{PORT}"
 
 # Twilio configuration with better error messages
 TWILIO_SID = os.getenv('TWILIO_ACCOUNT_SID')
@@ -30,6 +38,10 @@ TWILIO_TO = os.getenv('RECIPIENT_PHONE')
 # Validate required environment variables
 if not all([TWILIO_SID, TWILIO_TOKEN, TWILIO_FROM, TWILIO_TO]):
     raise ValueError("Missing required Twilio credentials")
+
+# Validate ngrok configuration if enabled
+if USE_NGROK and not NGROK_AUTH_TOKEN:
+    raise ValueError("NGROK_AUTH_TOKEN is required when USE_NGROK is True")
 
 client = Client(TWILIO_SID, TWILIO_TOKEN)
 
@@ -103,3 +115,25 @@ def send_sms(message: str) -> bool:
     except Exception as e:
         print(f"SMS failed: {e}")
         return False
+
+def get_server_url() -> str:
+    """
+    Get the current server URL (local or ngrok)
+    
+    Returns:
+        str: The base URL for the server
+    """
+    return os.getenv('NGROK_URL', BASE_URL)
+
+def format_api_url(endpoint: str) -> str:
+    """
+    Format a complete API URL
+    
+    Args:
+        endpoint: The API endpoint path
+        
+    Returns:
+        str: The complete URL
+    """
+    base = get_server_url()
+    return f"{base}/api/{endpoint.lstrip('/')}"
