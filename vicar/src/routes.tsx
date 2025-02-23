@@ -1,7 +1,7 @@
 
 import {
     createBrowserRouter,
-} from "react-router-dom";
+} from "react-router";
 
 import { Dashboard } from "./pages/auth/dashboard";
 import { Index } from "./pages";

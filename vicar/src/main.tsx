@@ -1,18 +1,15 @@
-import '@mantine/core/styles.css';
-import './index.css'
-import * as React from "react";
-import { createRoot } from 'react-dom/client';
-import { RouterProvider } from 'react-router-dom';
-import { router } from './routes.tsx';
-import { MantineProvider } from '@mantine/core';
-const root = createRoot(document.getElementById("root"));
-root.render(
-  
+  import './index.css'
+  import '@mantine/core/styles.css';
+  import { createRoot } from 'react-dom/client';
+  import { MantineProvider } from '@mantine/core';
+  import { BrowserRouter } from 'react-router-dom';
+  import App from './App.tsx';
+  const root = createRoot(document.getElementById("root")!);
+  root.render(
+    <MantineProvider>
+      <BrowserRouter>
+        <App />
+      </BrowserRouter>
+    </MantineProvider>
 
-    <React.StrictMode>
-      <MantineProvider><RouterProvider router={router} /></MantineProvider>
-
-    </React.StrictMode>
-  
-
-);
+  );
