@@ -1,15 +1,22 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS  
-from db import init_db, update_stock, get_stock
+from db import init_db, init_test_data, update_stock, get_stock
 from utils import calculate_forecast, check_counterfeit, send_sms
 import os
 from pyngrok import ngrok  # Add ngrok support
 
 app = Flask(__name__)
-CORS(app)
+CORS(app, resources={
+    r"/*": {
+        "origins": "*",
+        "methods": ["GET", "POST"],
+        "allow_headers": ["Content-Type"]
+    }
+})
 
-# Initialize database
+# Initialize database and test data
 init_db()
+init_test_data()
 
 # Setup ngrok tunnel
 def setup_ngrok():
@@ -64,6 +71,16 @@ def stock():
         } for r in rows
     ]
     return jsonify({"inventory": inventory})
+
+@app.route('/', methods=['GET'])
+def home():
+    return jsonify({
+        "message": "Welcome to Pharmacy Inventory API",
+        "endpoints": {
+            "GET /api/stock": "Get all inventory items",
+            "POST /api/update": "Update inventory item"
+        }
+    })
 
 if __name__ == "__main__":
     # Development settings
