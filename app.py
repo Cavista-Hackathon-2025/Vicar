@@ -1,5 +1,5 @@
 from flask import Flask, request, jsonify
-from flask_cors import CORS  # Fixed extra space
+from flask_cors import CORS  
 from db import init_db, update_stock, get_stock
 from utils import calculate_forecast, check_counterfeit, send_sms
 import os
@@ -73,7 +73,7 @@ if __name__ == "__main__":
         setup_ngrok()
     
     app.run(
-        host='127.0.0.1',  # Changed to localhost
+        host='127.0.0.1',  # Change to localhost
         port=port,
         debug=True  # Enable debug mode for development
     )

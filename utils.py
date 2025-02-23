@@ -26,7 +26,7 @@ NGROK_AUTH_TOKEN = os.getenv('NGROK_AUTH_TOKEN')
 # Base URL configuration
 BASE_URL = f"http://127.0.0.1:{PORT}"
 
-# Twilio configuration with better error messages
+# Twilio configuration with error messages
 TWILIO_SID = os.getenv('TWILIO_ACCOUNT_SID')
 if not TWILIO_SID:
     raise ValueError("TWILIO_ACCOUNT_SID not found in environment variables")
@@ -39,7 +39,7 @@ TWILIO_TO = os.getenv('RECIPIENT_PHONE')
 if not all([TWILIO_SID, TWILIO_TOKEN, TWILIO_FROM, TWILIO_TO]):
     raise ValueError("Missing required Twilio credentials")
 
-# Validate ngrok configuration if enabled
+# Validate ngrok configuration f enabled
 if USE_NGROK and not NGROK_AUTH_TOKEN:
     raise ValueError("NGROK_AUTH_TOKEN is required when USE_NGROK is True")
 

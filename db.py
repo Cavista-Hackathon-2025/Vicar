@@ -69,7 +69,7 @@ def get_stock() -> List[Tuple]:
     except sqlite3.Error as e:
         raise DatabaseError(f"Failed to retrieve stock: {e}")
 
-# Add this new function to get the current API base URL
+# function to get the current API base URL
 def get_api_base_url() -> str:
     """Get the current API base URL (ngrok or localhost)"""
     return API_BASE_URL
@@ -77,7 +77,7 @@ def get_api_base_url() -> str:
 if __name__ == "__main__":
     init_db()
     
-    # Test multiple inserts
+    # Testing  multiple inserts
     test_drugs = [
         ("Paracetamol", 100, 20, "BATCH001"),
         ("Amoxicillin", 50, 10, "BATCH002"),
