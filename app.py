@@ -1,13 +1,25 @@
 from flask import Flask, request, jsonify
-from  flask_cors import CORS
+from flask_cors import CORS  # Fixed extra space
 from db import init_db, update_stock, get_stock
 from utils import calculate_forecast, check_counterfeit, send_sms
 import os
+from pyngrok import ngrok  # Add ngrok support
 
 app = Flask(__name__)
 CORS(app)
 
+# Initialize database
 init_db()
+
+# Setup ngrok tunnel
+def setup_ngrok():
+    try:
+        # Get public URL
+        public_url = ngrok.connect(5000).public_url
+        print(f"* ngrok tunnel \"{public_url}\" -> \"http://127.0.0.1:5000\"")
+        app.config["BASE_URL"] = public_url
+    except Exception as e:
+        print(f"Failed to setup ngrok: {e}")
 
 @app.route('/api/update', methods=['POST'])
 def update():
@@ -38,7 +50,6 @@ def update():
         "counterfeit_risk": not is_valid
     })
 
-
 @app.route('/api/stock', methods=['GET'])
 def stock():
     rows = get_stock()
@@ -52,13 +63,17 @@ def stock():
             "counterfeit_risk": not check_counterfeit(r[5]) if r[5] else False
         } for r in rows
     ]
-    return jsonify({"inventory":inventory})
-
+    return jsonify({"inventory": inventory})
 
 if __name__ == "__main__":
+    # Development settings
     port = int(os.getenv("PORT", 5000))
-    app.run(host='0.0.0.0', port=port, debug=False) #Debug mode is false in production
-
-
-
-    #app.run(host='0.0.0.0', port=5000, debug=True)
+    
+    if os.getenv("USE_NGROK", "False") == "True":
+        setup_ngrok()
+    
+    app.run(
+        host='127.0.0.1',  # Changed to localhost
+        port=port,
+        debug=True  # Enable debug mode for development
+    )
