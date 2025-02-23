@@ -74,10 +74,8 @@ def get_api_base_url() -> str:
     """Get the current API base URL (ngrok or localhost)"""
     return API_BASE_URL
 
-if __name__ == "__main__":
-    init_db()
-    
-    # Testing  multiple inserts
+def init_test_data():
+    """Initialize test data in the database"""
     test_drugs = [
         ("Paracetamol", 100, 20, "BATCH001"),
         ("Amoxicillin", 50, 10, "BATCH002"),
@@ -86,6 +84,10 @@ if __name__ == "__main__":
     
     for drug, units, restock, batch in test_drugs:
         update_stock(drug, units, restock, batch)
+
+if __name__ == "__main__":
+    init_db()
+    init_test_data()
     
     # Query and display results
     stock = get_stock()
